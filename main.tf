@@ -3,6 +3,35 @@ provider "google" {
   region  = var.region
 }
 
+# Create a custom VPC network
+resource "google_compute_network" "custom_vpc" {
+  name                    = "custom-vpc"
+  auto_create_subnetworks = false
+}
+
+# Create a subnet in the custom VPC
+resource "google_compute_subnetwork" "custom_subnet" {
+  name          = "custom-subnet"
+  ip_cidr_range = "10.0.0.0/16"
+  network       = google_compute_network.custom_vpc.id
+  region        = var.region
+}
+
+# Create a firewall rule to allow HTTP traffic
+resource "google_compute_firewall" "allow_http" {
+  name    = "allow-http"
+  network = google_compute_network.custom_vpc.id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["web-server"]
+}
+
+# Create instances in the custom network
 resource "google_compute_instance" "web_server" {
   count         = var.instance_count
   name          = "web-server-${count.index}"
@@ -17,7 +46,7 @@ resource "google_compute_instance" "web_server" {
   }
 
   network_interface {
-    network = "default"
+    subnetwork = google_compute_subnetwork.custom_subnet.id
 
     access_config {
       # This allows external access
@@ -27,19 +56,7 @@ resource "google_compute_instance" "web_server" {
   metadata_startup_script = file("${path.module}/scripts/install_web.sh")
 }
 
-resource "google_compute_firewall" "allow_http" {
-  name    = "allow-http"
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["80"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["web-server"]
-}
-
+# Health check for the instances
 resource "google_compute_health_check" "default" {
   name = "http-health-check"
 
@@ -48,6 +65,7 @@ resource "google_compute_health_check" "default" {
   }
 }
 
+# Instance group
 resource "google_compute_instance_group" "web_group" {
   name        = "web-instance-group"
   zone        = var.zones[0]
@@ -58,6 +76,7 @@ resource "google_compute_instance_group" "web_group" {
   }
 }
 
+# Backend service
 resource "google_compute_backend_service" "web_backend" {
   name                    = "web-backend-service"
   health_checks           = [google_compute_health_check.default.self_link]
@@ -72,16 +91,19 @@ resource "google_compute_backend_service" "web_backend" {
   }
 }
 
+# URL map
 resource "google_compute_url_map" "web_map" {
   name            = "web-url-map"
   default_service = google_compute_backend_service.web_backend.self_link
 }
 
+# HTTP proxy
 resource "google_compute_target_http_proxy" "web_proxy" {
   name   = "web-proxy"
   url_map = google_compute_url_map.web_map.self_link
 }
 
+# Forwarding rule
 resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
   name        = "http-forwarding-rule"
   target      = google_compute_target_http_proxy.web_proxy.self_link
