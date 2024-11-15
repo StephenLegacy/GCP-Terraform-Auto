@@ -1,4 +1,3 @@
-Here’s the revised **README.md** file tailored for a live deployment from the Google Cloud **console terminal**:
 
 ---
 
@@ -123,4 +122,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-This version aligns the deployment steps with live interaction in the GCP Cloud Shell. Let me know if you’d like further adjustments!
+
