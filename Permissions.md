@@ -16,4 +16,12 @@ gcloud projects add-iam-policy-binding astral-depth-443217-q6 \
 member="serviceAccount:my-service-account@astral-depth-443217-q6.iam.gserviceaccount.com" \
 --role="roles/owner"
 
+THE CODE
 
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:YOUR-SERVICE-ACCOUNT@YOUR-PROJECT.iam.gserviceaccount.com" \
+  --role="roles/compute.admin"
+
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member="serviceAccount:YOUR-SERVICE-ACCOUNT@YOUR-PROJECT.iam.gserviceaccount.com" \
+  --role="roles/owner"
