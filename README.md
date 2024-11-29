@@ -37,7 +37,7 @@ This repository contains Terraform code to provision scalable and automated infr
 ### Step 2: Clone the Repository  
 Clone this repository into your Cloud Shell environment:  
 ```bash
-git clone https://github.com/your-username/terraform-gcp-deployments.git
+git clone https://github.com/StephenLegacy/terraform-gcp-deployments.git
 cd terraform-gcp-deployments
 ```
 
