@@ -38,7 +38,10 @@ SSH eliminates the need to repeatedly input your credentials. Here's how to set 
    ```bash
    git clone git@github.com:StephenLegacy/GCP-Terraform-Auto.git
    ```
-
+6. Next, move into the directory resulting from the cloned repository e.g
+```bash
+   cd GCP-Terraform-Auto
+   ```
 ---
 
 ### **2. Use HTTPS with Personal Access Token (If SSH is Not an Option)**
@@ -63,4 +66,4 @@ If you prefer HTTPS or SSH isn’t configured:
 - **Authentication Failed (HTTPS):** Double-check your username and PAT.
 - **Repository Not Found:** Verify the repository URL and your access rights.
 
-After completing these steps, the repository should be cloned into your cloud environment successfully. Let me know if you encounter any issues!
+
