@@ -6,7 +6,7 @@ provider "google" {
 # Create a custom VPC network
 resource "google_compute_network" "custom_vpc" {
   name                    = "custom-vpc"
-  auto_create_subnetworks = false
+  auto_create_subnetworks  = false
 }
 
 # Create a subnet in the custom VPC
@@ -76,16 +76,14 @@ resource "google_compute_instance_group" "web_group" {
   }
 }
 
-# Backend service
+# Backend service (Updated to remove `connection_draining`)
 resource "google_compute_backend_service" "web_backend" {
-  name                    = "web-backend-service"
-  health_checks           = [google_compute_health_check.default.self_link]
-  port_name               = "http"
-  protocol                = "HTTP"
-  timeout_sec             = 10
-  connection_draining {
-    draining_timeout_sec = 30
-  }
+  name              = "web-backend-service"
+  health_checks     = [google_compute_health_check.default.self_link]
+  port_name         = "http"
+  protocol          = "HTTP"
+  timeout_sec       = 10
+
   backend {
     group = google_compute_instance_group.web_group.self_link
   }
@@ -99,7 +97,7 @@ resource "google_compute_url_map" "web_map" {
 
 # HTTP proxy
 resource "google_compute_target_http_proxy" "web_proxy" {
-  name   = "web-proxy"
+  name    = "web-proxy"
   url_map = google_compute_url_map.web_map.self_link
 }
 
