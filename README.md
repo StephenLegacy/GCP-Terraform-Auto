@@ -2,7 +2,7 @@
 ---
 
 # Terraform GCP Deployment with Load Balancing and Web Servers  
-**By Stephen Oloo**  
+**--Stephen Oloo** *DevFestKisii2024*
 
 This repository contains Terraform code to provision scalable and automated infrastructure on Google Cloud Platform (GCP). It includes setting up a custom Virtual Private Cloud (VPC), deploying multiple instances with web servers, and configuring a load balancer for high availability. All steps are designed to be executed from the GCP Cloud Shell or any terminal with access to GCP.
 
